@@ -28,12 +28,13 @@ function showApp() {
   show("app-section");
 }
 
-// ✅ Register
+// Register
 document.getElementById("register-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const name = document.getElementById("register-name").value;
+  const username = document.getElementById("register-username").value;
   const password = document.getElementById("register-password").value;
 
+  // Clear messages
   document.getElementById("register-message").textContent = "";
   document.getElementById("register-error").textContent = "";
 
@@ -41,14 +42,14 @@ document.getElementById("register-form")?.addEventListener("submit", async (e) =
     const res = await fetch(apiBaseUrl + "/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }) // ✅ correct field name
+      body: JSON.stringify({ username, password })
     });
 
     if (res.ok) {
       document.getElementById("register-message").textContent = "Registered successfully! Redirecting to login...";
       setTimeout(() => {
         showLogin();
-        document.getElementById("login-username").value = name;
+        document.getElementById("login-username").value = username;
       }, 1500);
     } else {
       document.getElementById("register-error").textContent = await res.text();
@@ -64,14 +65,15 @@ document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
 
+  // Clear messages
   document.getElementById("login-message").textContent = "";
   document.getElementById("login-error").textContent = "";
 
   try {
-    const res = await fetch(apiBaseUrl + "/api/users/login", {
+    const res = await fetch(apiBaseUrl + "/api/auth/login", {  // <-- fixed URL here
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: username, password }) // ✅ backend may expect "name" here too
+      body: JSON.stringify({ username, password })
     });
 
     if (res.ok) {
@@ -162,5 +164,5 @@ if (user) {
   showApp();
   loadTransactions(user);
 } else {
-  showRegister(); 
+  showRegister();
 }
