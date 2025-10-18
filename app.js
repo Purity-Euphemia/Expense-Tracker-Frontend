@@ -28,13 +28,12 @@ function showApp() {
   show("app-section");
 }
 
-// Register
+// ✅ Register
 document.getElementById("register-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const username = document.getElementById("register-username").value;
+  const name = document.getElementById("register-name").value;
   const password = document.getElementById("register-password").value;
 
-  // Clear messages
   document.getElementById("register-message").textContent = "";
   document.getElementById("register-error").textContent = "";
 
@@ -42,14 +41,14 @@ document.getElementById("register-form")?.addEventListener("submit", async (e) =
     const res = await fetch(apiBaseUrl + "/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ name, password }) // ✅ correct field name
     });
 
     if (res.ok) {
       document.getElementById("register-message").textContent = "Registered successfully! Redirecting to login...";
       setTimeout(() => {
         showLogin();
-        document.getElementById("login-username").value = username;
+        document.getElementById("login-username").value = name;
       }, 1500);
     } else {
       document.getElementById("register-error").textContent = await res.text();
@@ -65,7 +64,6 @@ document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
 
-  // Clear messages
   document.getElementById("login-message").textContent = "";
   document.getElementById("login-error").textContent = "";
 
@@ -73,7 +71,7 @@ document.getElementById("login-form")?.addEventListener("submit", async (e) => {
     const res = await fetch(apiBaseUrl + "/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ name: username, password }) // ✅ backend may expect "name" here too
     });
 
     if (res.ok) {
