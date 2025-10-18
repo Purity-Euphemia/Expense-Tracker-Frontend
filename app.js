@@ -9,6 +9,7 @@ const logout = () => {
   showLogin();
 };
 
+// Show sections
 function showRegister() {
   hide("login-section");
   hide("app-section");
@@ -33,15 +34,23 @@ document.getElementById("register-form")?.addEventListener("submit", async (e) =
   const username = document.getElementById("register-username").value;
   const password = document.getElementById("register-password").value;
 
+  // Clear messages
+  document.getElementById("register-message").textContent = "";
+  document.getElementById("register-error").textContent = "";
+
   try {
-    const res = await fetch(apiBaseUrl + "/auth/register", {
+    const res = await fetch(apiBaseUrl + "/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
+
     if (res.ok) {
-      document.getElementById("register-message").textContent = "Registered successfully!";
-      showLogin();
+      document.getElementById("register-message").textContent = "Registered successfully! Redirecting to login...";
+      setTimeout(() => {
+        showLogin();
+        document.getElementById("login-username").value = username;
+      }, 1500);
     } else {
       document.getElementById("register-error").textContent = await res.text();
     }
@@ -56,12 +65,17 @@ document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
 
+  // Clear messages
+  document.getElementById("login-message").textContent = "";
+  document.getElementById("login-error").textContent = "";
+
   try {
-    const res = await fetch(apiBaseUrl + "/auth/login", {
+    const res = await fetch(apiBaseUrl + "/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
+
     if (res.ok) {
       localStorage.setItem("username", username);
       document.getElementById("current-user").textContent = username;
@@ -81,6 +95,7 @@ document.getElementById("logout-btn")?.addEventListener("click", logout);
 // Add Transaction
 document.getElementById("transaction-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const tx = {
     username: getUser(),
     amount: parseFloat(document.getElementById("amount").value),
@@ -114,6 +129,7 @@ async function loadTransactions(user) {
     const transactions = await res.json();
     const tbody = document.querySelector("#transactions-table tbody");
     tbody.innerHTML = "";
+
     transactions.forEach(tx => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -141,12 +157,12 @@ async function loadTransactions(user) {
   }
 }
 
-// Auto-login
+// Auto-load on page load
 const user = getUser();
 if (user) {
   document.getElementById("current-user").textContent = user;
   showApp();
   loadTransactions(user);
 } else {
-  showLogin();
+  showRegister(); 
 }
