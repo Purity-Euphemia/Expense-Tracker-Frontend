@@ -99,17 +99,23 @@ document.getElementById("transaction-form")?.addEventListener("submit", async (e
   e.preventDefault();
 
   const tx = {
-    username: getUser(),
+    userEmail: getUser(),
     amount: parseFloat(document.getElementById("amount").value),
-    type: document.getElementById("type").value,
+    type: document.getElementById("type").value, // "income" or "expense"
     category: document.getElementById("category").value,
     paymentMethod: document.getElementById("paymentMethod").value,
     date: document.getElementById("date").value,
     notes: document.getElementById("notes").value,
-    recurring: document.getElementById("recurring").checked
+    recurring: document.getElementById("recurring").checked,
+    source: document.getElementById("source").value
   };
 
-  const res = await fetch(apiBaseUrl + "/transactions", {
+  const endpoint =
+    tx.type === "income"
+      ? `${apiBaseUrl}/api/incomes`
+      : `${apiBaseUrl}/api/expenses?userEmail=${encodeURIComponent(tx.userEmail)}`;
+
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(tx)
@@ -126,37 +132,56 @@ document.getElementById("transaction-form")?.addEventListener("submit", async (e
 
 // Load Transactions
 async function loadTransactions(user) {
-  const res = await fetch(`${apiBaseUrl}/transactions/${user}`);
-  if (res.ok) {
-    const transactions = await res.json();
-    const tbody = document.querySelector("#transactions-table tbody");
-    tbody.innerHTML = "";
+  const [incomesRes, expensesRes] = await Promise.all([
+    fetch(`${apiBaseUrl}/api/incomes/user/${encodeURIComponent(user)}`),
+    fetch(`${apiBaseUrl}/api/expenses/user/${encodeURIComponent(user)}`)
+  ]);
 
-    transactions.forEach(tx => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${tx.amount}</td>
-        <td>${tx.type}</td>
-        <td>${tx.category}</td>
-        <td>${tx.paymentMethod}</td>
-        <td>${tx.date}</td>
-        <td>${tx.notes}</td>
-        <td>${tx.recurring ? "Yes" : "No"}</td>
-        <td><button class="delete-btn" data-id="${tx.id}">X</button></td>
-      `;
-      tbody.appendChild(row);
-    });
+  const incomes = incomesRes.ok ? await incomesRes.json() : [];
+  const expenses = expensesRes.ok ? await expensesRes.json() : [];
 
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        const res = await fetch(`${apiBaseUrl}/transactions/${user}/${id}`, {
-          method: "DELETE"
-        });
-        if (res.ok) loadTransactions(user);
-      });
+  // Tag each with type
+  const transactions = [
+    ...incomes.map(tx => ({ ...tx, type: "income" })),
+    ...expenses.map(tx => ({ ...tx, type: "expense" }))
+  ];
+
+  const tbody = document.querySelector("#transactions-table tbody");
+  tbody.innerHTML = "";
+
+  transactions.forEach(tx => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${tx.amount}</td>
+      <td>${tx.type}</td>
+      <td>${tx.category}</td>
+      <td>${tx.paymentMethod}</td>
+      <td>${tx.date}</td>
+      <td>${tx.notes}</td>
+      <td>${tx.recurring ? "Yes" : "No"}</td>
+      <td><button class="delete-btn" data-id="${tx.id}" data-type="${tx.type}">X</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id");
+      const type = btn.getAttribute("data-type");
+
+      const url =
+        type === "income"
+          ? `${apiBaseUrl}/api/incomes/${id}`
+          : `${apiBaseUrl}/api/expenses/${id}`;
+
+      const res = await fetch(url, { method: "DELETE" });
+      if (res.ok) {
+        loadTransactions(user);
+      } else {
+        alert("Failed to delete.");
+      }
     });
-  }
+  });
 }
 
 // Auto-load on page load
