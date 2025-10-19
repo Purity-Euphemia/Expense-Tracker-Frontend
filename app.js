@@ -3,9 +3,9 @@ const apiBaseUrl = "http://localhost:8080";
 // Helpers
 const show = (id) => document.getElementById(id).classList.remove("hidden");
 const hide = (id) => document.getElementById(id).classList.add("hidden");
-const getUser = () => localStorage.getItem("username");
+const getUser = () => localStorage.getItem("name");
 const logout = () => {
-  localStorage.removeItem("username");
+  localStorage.removeItem("name");
   showLogin();
 };
 
@@ -31,10 +31,11 @@ function showApp() {
 // Register
 document.getElementById("register-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const username = document.getElementById("register-username").value;
+
+  const name = document.getElementById("register-name").value;
+  const email = document.getElementById("register-email").value;
   const password = document.getElementById("register-password").value;
 
-  // Clear messages
   document.getElementById("register-message").textContent = "";
   document.getElementById("register-error").textContent = "";
 
@@ -42,14 +43,14 @@ document.getElementById("register-form")?.addEventListener("submit", async (e) =
     const res = await fetch(apiBaseUrl + "/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ name, email, password })
     });
 
     if (res.ok) {
       document.getElementById("register-message").textContent = "Registered successfully! Redirecting to login...";
       setTimeout(() => {
         showLogin();
-        document.getElementById("login-username").value = username;
+        document.getElementById("login-email").value = email;
       }, 1500);
     } else {
       document.getElementById("register-error").textContent = await res.text();
@@ -62,25 +63,26 @@ document.getElementById("register-form")?.addEventListener("submit", async (e) =
 // Login
 document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const username = document.getElementById("login-username").value;
+
+  const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
 
-  // Clear messages
   document.getElementById("login-message").textContent = "";
   document.getElementById("login-error").textContent = "";
 
   try {
-    const res = await fetch(apiBaseUrl + "/api/auth/login", {  // <-- fixed URL here
+    const res = await fetch(apiBaseUrl + "/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ email, password })
     });
 
     if (res.ok) {
-      localStorage.setItem("username", username);
-      document.getElementById("current-user").textContent = username;
+      const data = await res.json();
+      localStorage.setItem("name", data.name || email);
+      document.getElementById("current-user").textContent = data.name || email;
       showApp();
-      loadTransactions(username);
+      loadTransactions(data.name || email);
     } else {
       document.getElementById("login-error").textContent = await res.text();
     }
