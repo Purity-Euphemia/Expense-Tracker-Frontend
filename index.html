@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Expense Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
     <h1>Expense Tracker</h1>
 
-    <section id="register-section">
-      <h2>Register</h2>
-      <form id="register-form">
-        <input type="text" id="register-name" placeholder="Name" required />
-        <input type="email" id="register-email" placeholder="Email" required />
-        <input type="password" id="register-password" placeholder="Password" required />
-        <button type="submit">Register</button>
-      </form>
-      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
-      <p id="register-message" class="success"></p>
-      <p id="register-error" class="error"></p>
-    </section>
-
-    <section id="login-section" class="hidden">
-      <h2>Login</h2>
-      <form id="login-form">
-        <input type="text" id="login-username" placeholder="Username" required />
-        <input type="email" id="login-email" placeholder="Email" required />
-        <input type="password" id="login-password" placeholder="Password" required />
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
-      <p id="login-message" class="success"></p>
-      <p id="login-error" class="error"></p>
-    </section>
-
-    <section id="app-section" class="hidden">
-      <div id="user-section">
-        Logged in as <span id="current-user"></span>
+    <!-- AUTH -->
+    <section id="auth-section" class="form-card">
+        <h3>Login</h3>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button id="login-btn">Login</button>
         <button id="logout-btn">Logout</button>
-      </div>
-
-      <form id="transaction-form">
-        <input type="number" id="amount" placeholder="Amount" required />
-        <select id="type" required>
-          <option value="">Type</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-        <input type="text" id="category" placeholder="Category" required />
-        <input type="text" id="paymentMethod" placeholder="Payment Method" required />
-        <input type="date" id="date" required />
-        <input type="text" id="notes" placeholder="Notes (optional)" />
-        <label><input type="checkbox" id="recurring" /> Recurring</label>
-        <button type="submit">Add Transaction</button>
-      </form>
-
-      <table id="transactions-table">
-        <thead>
-          <tr>
-            <th>Amount</th><th>Type</th><th>Category</th><th>Payment</th><th>Date</th><th>Notes</th><th>Recurring</th><th>Delete</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <p id="app-message" class="success"></p>
-      <p id="app-error" class="error"></p>
     </section>
-  </div>
 
-  <script src="app.js"></script>
+    <!-- BUDGET -->
+    <section id="budget-section" class="form-card">
+        <h3>Set Budget</h3>
+        <input type="number" id="budget-amount" placeholder="Amount">
+        <input type="text" id="budget-category" placeholder="Category ID">
+        <input type="month" id="budget-month">
+        <button id="add-budget-btn">Add Budget</button>
+    </section>
+
+    <!-- CATEGORY -->
+    <section id="category-section" class="form-card">
+        <h3>Add Category</h3>
+        <input type="text" id="category-name" placeholder="Category Name">
+        <button id="add-category-btn">Add Category</button>
+        <ul id="category-list"></ul>
+    </section>
+
+    <!-- EXPENSE -->
+    <section id="expense-section" class="form-card">
+        <h3>Add Expense</h3>
+        <input type="text" id="expense-category" placeholder="Category ID">
+        <input type="number" id="expense-amount" placeholder="Amount">
+        <input type="date" id="expense-date">
+        <button id="add-expense-btn">Add Expense</button>
+        <ul id="expense-list"></ul>
+    </section>
+
+    <!-- INCOME -->
+    <section id="income-section" class="form-card">
+        <h3>Add Income</h3>
+        <input type="text" id="income-source" placeholder="Source">
+        <input type="number" id="income-amount" placeholder="Amount">
+        <input type="date" id="income-date">
+        <button id="add-income-btn">Add Income</button>
+        <ul id="income-list"></ul>
+    </section>
+
+    <!-- REPORT -->
+    <section id="report-section" class="form-card">
+        <h3>Monthly Report</h3>
+        <input type="month" id="report-month">
+        <button id="generate-report-btn">Generate Report</button>
+        <div id="report-result"></div>
+    </section>
+
+    <!-- USER -->
+    <section id="user-section" class="form-card">
+        <h3>User Info</h3>
+        <button id="get-user-btn">Load User Info</button>
+        <div id="user-info"></div>
+    </section>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>
