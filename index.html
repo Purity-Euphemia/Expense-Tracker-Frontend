@@ -1,87 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Expense Tracker</h1>
+  <header class="navbar">
+    <h2 class="logo">💰 Expense Tracker</h2>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#why">Why Use This?</a>
+      <a href="#footer">Contact</a>
+    </nav>
+  </header>
 
-    <!-- REGISTER -->
-    <section id="register-section" class="form-card">
-        <h3>Register</h3>
-        <input type="text" id="register-name" placeholder="Full Name">
-        <input type="email" id="register-email" placeholder="Email">
-        <input type="password" id="register-password" placeholder="Password">
-        <button id="register-btn">Register</button>
-        <p id="register-message"></p>
-    </section>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Take Control of Your Finances</h1>
+      <p>Manage your income, expenses, and budgets effortlessly — all in one place.</p>
+      <button id="get-started-btn">Get Started</button>
+    </div>
+  </section>
 
-    <!-- AUTH -->
-    <section id="auth-section" class="form-card">
-        <h3>Login</h3>
-        <input type="email" id="login-email" placeholder="Email">
-        <input type="password" id="login-password" placeholder="Password">
-        <button id="login-btn">Login</button>
-        <button id="logout-btn">Logout</button>
-        <p id="login-message"></p>
-    </section>
+  <section id="why" class="why-section">
+    <h2>Why You Need This App</h2>
+    <div class="reasons">
+      <div class="card">
+        <h3>💸 Track Expenses</h3>
+        <p>See exactly where your money goes each month.</p>
+      </div>
+      <div class="card">
+        <h3>📊 Plan Budgets</h3>
+        <p>Set spending limits and stay on top of your financial goals.</p>
+      </div>
+      <div class="card">
+        <h3>📅 View Reports</h3>
+        <p>Analyze your habits with clear monthly summaries.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- BUDGET -->
-    <section id="budget-section" class="form-card">
-        <h3>Set Budget</h3>
-        <input type="number" id="budget-amount" placeholder="Amount">
-        <input type="text" id="budget-category" placeholder="Category ID">
-        <input type="month" id="budget-month">
-        <button id="add-budget-btn">Add Budget</button>
-        <ul id="budget-list"></ul>
-    </section>
+  <footer id="footer">
+    <p>&copy; 2025 Expense Tracker | Built for smarter saving 💡</p>
+  </footer>
 
-    <!-- CATEGORY -->
-    <section id="category-section" class="form-card">
-        <h3>Add Category</h3>
-        <input type="text" id="category-name" placeholder="Category Name">
-        <button id="add-category-btn">Add Category</button>
-        <ul id="category-list"></ul>
-    </section>
-
-    <!-- EXPENSE -->
-    <section id="expense-section" class="form-card">
-        <h3>Add Expense</h3>
-        <input type="text" id="expense-category" placeholder="Category ID">
-        <input type="number" id="expense-amount" placeholder="Amount">
-        <input type="date" id="expense-date">
-        <button id="add-expense-btn">Add Expense</button>
-        <ul id="expense-list"></ul>
-    </section>
-
-    <!-- INCOME -->
-    <section id="income-section" class="form-card">
-        <h3>Add Income</h3>
-        <input type="text" id="income-source" placeholder="Source">
-        <input type="number" id="income-amount" placeholder="Amount">
-        <input type="date" id="income-date">
-        <button id="add-income-btn">Add Income</button>
-        <ul id="income-list"></ul>
-    </section>
-
-    <!-- REPORT -->
-    <section id="report-section" class="form-card">
-        <h3>Monthly Report</h3>
-        <input type="month" id="report-month">
-        <button id="generate-report-btn">Generate Report</button>
-        <div id="report-result"></div>
-    </section>
-
-    <!-- USER -->
-    <section id="user-section" class="form-card">
-        <h3>User Info</h3>
-        <button id="get-user-btn">Load User Info</button>
-        <div id="user-info"></div>
-    </section>
-
-    <script type="module" src="app.js"></script>
+  <script type="module" src="js/landing.js"></script>
 </body>
 </html>
