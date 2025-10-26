@@ -9,6 +9,16 @@
 <body>
     <h1>Expense Tracker</h1>
 
+    <!-- REGISTER -->
+    <section id="register-section" class="form-card">
+        <h3>Register</h3>
+        <input type="text" id="register-name" placeholder="Full Name">
+        <input type="email" id="register-email" placeholder="Email">
+        <input type="password" id="register-password" placeholder="Password">
+        <button id="register-btn">Register</button>
+        <p id="register-message"></p>
+    </section>
+
     <!-- AUTH -->
     <section id="auth-section" class="form-card">
         <h3>Login</h3>
@@ -16,6 +26,7 @@
         <input type="password" id="login-password" placeholder="Password">
         <button id="login-btn">Login</button>
         <button id="logout-btn">Logout</button>
+        <p id="login-message"></p>
     </section>
 
     <!-- BUDGET -->
@@ -25,6 +36,7 @@
         <input type="text" id="budget-category" placeholder="Category ID">
         <input type="month" id="budget-month">
         <button id="add-budget-btn">Add Budget</button>
+        <ul id="budget-list"></ul>
     </section>
 
     <!-- CATEGORY -->

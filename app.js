@@ -1,195 +1,96 @@
-const apiBaseUrl = "http://localhost:8080";
+import { AuthService } from "./services/AuthService.js";
+import { BudgetService } from "./services/BudgetService.js";
+import { CategoryService } from "./services/CategoryService.js";
+import { ExpenseService } from "./services/ExpenseService.js";
+import { IncomeService } from "./services/IncomeService.js";
+import { ReportService } from "./services/ReportService.js";
+import { UserService } from "./services/UserService.js";
 
-// Helpers
-const show = (id) => document.getElementById(id).classList.remove("hidden");
-const hide = (id) => document.getElementById(id).classList.add("hidden");
-const getUser = () => localStorage.getItem("name");
-const logout = () => {
-  localStorage.removeItem("name");
-  showLogin();
-};
+const baseUrl = "http://localhost:8080/api";
 
-// Show sections
-function showRegister() {
-  hide("login-section");
-  hide("app-section");
-  show("register-section");
-}
+// Initialize services
+const authService = new AuthService(baseUrl);
+const budgetService = new BudgetService(baseUrl);
+const categoryService = new CategoryService(baseUrl);
+const expenseService = new ExpenseService(baseUrl);
+const incomeService = new IncomeService(baseUrl);
+const reportService = new ReportService(baseUrl);
+const userService = new UserService(baseUrl);
 
-function showLogin() {
-  hide("register-section");
-  hide("app-section");
-  show("login-section");
-}
-
-function showApp() {
-  hide("register-section");
-  hide("login-section");
-  show("app-section");
-}
-
-// Register
-document.getElementById("register-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById("register-name").value;
-  const email = document.getElementById("register-email").value;
-  const password = document.getElementById("register-password").value;
-
-  document.getElementById("register-message").textContent = "";
-  document.getElementById("register-error").textContent = "";
-
-  try {
-    const res = await fetch(apiBaseUrl + "/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password })
-    });
-
-    if (res.ok) {
-      document.getElementById("register-message").textContent = "Registered successfully! Redirecting to login...";
-      setTimeout(() => {
-        showLogin();
-        document.getElementById("login-email").value = email;
-      }, 1500);
-    } else {
-      document.getElementById("register-error").textContent = await res.text();
-    }
-  } catch {
-    document.getElementById("register-error").textContent = "Network error.";
-  }
+// ==================== AUTH ====================
+document.getElementById("register-btn").addEventListener("click", async () => {
+    const data = {
+        name: document.getElementById("register-name").value,
+        email: document.getElementById("register-email").value,
+        password: document.getElementById("register-password").value,
+    };
+    const res = await authService.register(data);
+    console.log("Registered:", res);
 });
 
-// Login
-document.getElementById("login-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
-
-  document.getElementById("login-message").textContent = "";
-  document.getElementById("login-error").textContent = "";
-
-  try {
-    const res = await fetch(apiBaseUrl + "/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      localStorage.setItem("name", data.name || email);
-      document.getElementById("current-user").textContent = data.name || email;
-      showApp();
-      loadTransactions(data.name || email);
-    } else {
-      document.getElementById("login-error").textContent = await res.text();
-    }
-  } catch {
-    document.getElementById("login-error").textContent = "Login failed.";
-  }
+document.getElementById("login-btn").addEventListener("click", async () => {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    const res = await authService.login({ email, password });
+    console.log("Logged in:", res);
 });
 
-// Logout
-document.getElementById("logout-btn")?.addEventListener("click", logout);
-
-// Add Transaction
-document.getElementById("transaction-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const tx = {
-    userEmail: getUser(),
-    amount: parseFloat(document.getElementById("amount").value),
-    type: document.getElementById("type").value, // "income" or "expense"
-    category: document.getElementById("category").value,
-    paymentMethod: document.getElementById("paymentMethod").value,
-    date: document.getElementById("date").value,
-    notes: document.getElementById("notes").value,
-    recurring: document.getElementById("recurring").checked,
-    source: document.getElementById("source").value
-  };
-
-  const endpoint =
-    tx.type === "income"
-      ? `${apiBaseUrl}/api/incomes`
-      : `${apiBaseUrl}/api/expenses?userEmail=${encodeURIComponent(tx.userEmail)}`;
-
-  const res = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(tx)
-  });
-
-  if (res.ok) {
-    document.getElementById("app-message").textContent = "Transaction added!";
-    loadTransactions(getUser());
-    e.target.reset();
-  } else {
-    document.getElementById("app-error").textContent = await res.text();
-  }
+document.getElementById("logout-btn").addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+    const res = await authService.logout(token);
+    console.log(res);
 });
 
-// Load Transactions
-async function loadTransactions(user) {
-  const [incomesRes, expensesRes] = await Promise.all([
-    fetch(`${apiBaseUrl}/api/incomes/user/${encodeURIComponent(user)}`),
-    fetch(`${apiBaseUrl}/api/expenses/user/${encodeURIComponent(user)}`)
-  ]);
+// ==================== BUDGET ====================
+document.getElementById("add-budget-btn").addEventListener("click", async () => {
+    const data = {
+        amount: parseFloat(document.getElementById("budget-amount").value),
+        categoryId: document.getElementById("budget-category").value,
+        month: parseInt(document.getElementById("budget-month").value.split("-")[1]),
+        year: parseInt(document.getElementById("budget-month").value.split("-")[0])
+    };
+    const res = await budgetService.setBudget(data);
+    console.log("Budget Added:", res);
+});
 
-  const incomes = incomesRes.ok ? await incomesRes.json() : [];
-  const expenses = expensesRes.ok ? await expensesRes.json() : [];
+// ==================== CATEGORY ====================
+document.getElementById("add-category-btn").addEventListener("click", async () => {
+    const name = document.getElementById("category-name").value;
+    const res = await categoryService.addCategory({ name });
+    console.log("Category Added:", res);
+});
 
-  // Tag each with type
-  const transactions = [
-    ...incomes.map(tx => ({ ...tx, type: "income" })),
-    ...expenses.map(tx => ({ ...tx, type: "expense" }))
-  ];
+// ==================== EXPENSE ====================
+document.getElementById("add-expense-btn").addEventListener("click", async () => {
+    const data = {
+        categoryId: document.getElementById("expense-category").value,
+        amount: parseFloat(document.getElementById("expense-amount").value),
+        date: document.getElementById("expense-date").value
+    };
+    const res = await expenseService.addExpense(data);
+    console.log("Expense Added:", res);
+});
 
-  const tbody = document.querySelector("#transactions-table tbody");
-  tbody.innerHTML = "";
+// ==================== INCOME ====================
+document.getElementById("add-income-btn").addEventListener("click", async () => {
+    const data = {
+        source: document.getElementById("income-source").value,
+        amount: parseFloat(document.getElementById("income-amount").value),
+        date: document.getElementById("income-date").value
+    };
+    const res = await incomeService.addIncome(data);
+    console.log("Income Added:", res);
+});
 
-  transactions.forEach(tx => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${tx.amount}</td>
-      <td>${tx.type}</td>
-      <td>${tx.category}</td>
-      <td>${tx.paymentMethod}</td>
-      <td>${tx.date}</td>
-      <td>${tx.notes}</td>
-      <td>${tx.recurring ? "Yes" : "No"}</td>
-      <td><button class="delete-btn" data-id="${tx.id}" data-type="${tx.type}">X</button></td>
-    `;
-    tbody.appendChild(row);
-  });
+// ==================== REPORT ====================
+document.getElementById("generate-report-btn").addEventListener("click", async () => {
+    const [year, month] = document.getElementById("report-month").value.split("-");
+    const res = await reportService.getMonthlyReport(parseInt(month), parseInt(year));
+    document.getElementById("report-result").innerText = JSON.stringify(res, null, 2);
+});
 
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-id");
-      const type = btn.getAttribute("data-type");
-
-      const url =
-        type === "income"
-          ? `${apiBaseUrl}/api/incomes/${id}`
-          : `${apiBaseUrl}/api/expenses/${id}`;
-
-      const res = await fetch(url, { method: "DELETE" });
-      if (res.ok) {
-        loadTransactions(user);
-      } else {
-        alert("Failed to delete.");
-      }
-    });
-  });
-}
-
-// Auto-load on page load
-const user = getUser();
-if (user) {
-  document.getElementById("current-user").textContent = user;
-  showApp();
-  loadTransactions(user);
-} else {
-  showRegister();
-}
+// ==================== USER ====================
+document.getElementById("get-user-btn").addEventListener("click", async () => {
+    const res = await userService.getUserInfo();
+    document.getElementById("user-info").innerText = JSON.stringify(res, null, 2);
+});
