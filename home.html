@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Expense Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <h2 class="logo">💰 Expense Tracker</h2>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="budget.html">Budget</a>
+      <a href="expense.html">Expense</a>
+      <a href="income.html">Income</a>
+      <a href="report.html">Report</a>
+      <a href="#" id="logout-btn">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Welcome Section -->
+  <section class="home-content">
+    <h1 id="welcome-text">Welcome!</h1>
+    <p>Your personalized financial dashboard</p>
+  </section>
+
+  <!-- Summary Section -->
+  <section class="summary">
+    <div class="card" id="total-income">
+      <h3>Total Income</h3>
+      <p>₦0</p>
+    </div>
+    <div class="card" id="total-expense">
+      <h3>Total Expense</h3>
+      <p>₦0</p>
+    </div>
+    <div class="card" id="balance">
+      <h3>Balance</h3>
+      <p>₦0</p>
+    </div>
+  </section>
+
+  <script src="services/home.js"></script>
+</body>
+</html>

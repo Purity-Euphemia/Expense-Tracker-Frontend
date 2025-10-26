@@ -20,14 +20,14 @@ body {
 }
 
 .navbar .logo {
-  color: #0366d6;
+  color:white;
   font-weight: bold;
 }
 
 .navbar nav a {
   margin-left: 20px;
   text-decoration: none;
-  color: #333;
+  color: white;
   font-weight: 500;
   transition: 0.3s;
 }
@@ -60,7 +60,7 @@ body {
 
 .hero-content button {
   background: white;
-  color: #0366d6;
+  color: #096ee0;
   border: none;
   padding: 12px 25px;
   border-radius: 25px;
@@ -173,7 +173,7 @@ footer {
 }
 
 .auth-card button:hover {
-  background: #0253b3;
+  background: #c4cad1;
 }
 
 .switch-text {
@@ -188,4 +188,52 @@ footer {
 
 .switch-text a:hover {
   text-decoration: underline;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: #f4f7fb;
+  color: #333;
+}
+
+.navbar {
+  background-color: #0056b3;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+.home-content {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.summary {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+  width: 250px;
+  text-align: center;
 }
