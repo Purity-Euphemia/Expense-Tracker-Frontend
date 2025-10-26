@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Expense Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <h2 class="logo">💰 Expense Tracker</h2>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section class="auth-section">
+    <div class="auth-card">
+      <h2>Create Account</h2>
+      <p>Sign up to start tracking your income and expenses.</p>
+
+      <input type="text" id="name" placeholder="Full Name">
+      <input type="email" id="email" placeholder="Email Address">
+      <input type="password" id="password" placeholder="Password">
+
+      <button id="register-btn">Register</button>
+
+      <p class="switch-text">
+        Already have an account? <a href="login.html">Login here</a>
+      </p>
+    </div>
+  </section>
+
+  <script type="module" src="services/register.js"></script>
+</body>
+</html>
