@@ -1,6 +1,6 @@
-const btn = document.getElementById("get-started-btn");
+const getStartedBtn = document.getElementById("get-started-btn");
 
-btn.addEventListener("click", () => {
-  // Redirect to register page
+// When user clicks "Get Started", send them to register page
+getStartedBtn.addEventListener("click", () => {
   window.location.href = "register.html";
 });
